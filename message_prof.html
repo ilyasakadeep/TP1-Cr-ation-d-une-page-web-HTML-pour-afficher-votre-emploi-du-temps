@@ -1,96 +1,27 @@
 <!DOCTYPE html>
 <html>
-<style>
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-    }
 
-    td, th {
-      border: 1px solid black;
-      padding: 10px;
-      text-align: center;
-      width: 33.33
-      height: 50px; 
-    }
-  </style>
 <head>
-    <title style="text-align: center;"></ class="center">Mon emploi du temps</title>
-    <div style="text-align: center;">
-        <img src="logo.png" alt="Logo" width="400">
-    </div>
-    <u><p style="text-align: right;">annee universitaire 2025-2026</p></u>
-    <img src="photo.png" alt="Emploi du temps" width="200">
-    <h2 style="text-align: center;">Emploi du temps (previsoire) --IAIL-S2</h2>   
+    <title>Contacter le professeur</title>
 </head>
 
 <body>
-    <table border="1">
-        <tr>
-            <th >Heure</th>
-            <td >09h:00 a 10h:30</td>
-            <td >10h:30 a 12h:00</td>
-            <td >12h:15 a 13h:45</td>
-            <td >13h:45 a 15h:15</td>
-            <td >15h:30 a 17h:00</td>
-            <td >17h:00 a 18h:30</td>
-        </tr>
-        <tr>
-            <th >lundi</th>
-            <td>Programmation pyton<br>Prof M.larqui<br>cours - amphi A</td>
-            <td>Programmation C<br>Prof H.Oudani<br>cours - amphi A</td>
-            <td></td>
-            <td>Programmation C<br><p style="color: red;">Tp/Td Grp1 - salle P2</p><a href="message_prof.html">Prof M.larqui</a></td>
-            <td>Programmation pyton<br><p style="color: red;">Tp/Td Grp3 - salle P2</p><a href="message_prof.html">Prof A.Elouardi</a></td>
-            <td>Programmation pyton<br><p style="color: red;">Tp/Td Grp2 - salle P2</p><a href="message_prof.html">Prof A.Elouardi</a></td>
-        </tr>
-        <tr>
-            <th >mardi</th>
-            <td>Programmation pyton<br><p style="color: red;">Tp/Td Grp1 - salle P2</p><a href="message_prof.html">Prof M.larqui</a></td>
-            <td></td>
-            <td>digital skills<br>Prof A.Elouardi<br>cours - amphi A</td>
-            <td>digital skills<br>Prof A.Elouardi<br>Tp/Td - amphi A</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <th >mercredi</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Programmation C<br><p style="color: red;">Tp/Td Grp1 - salle P2</p> <a href="message_prof.html">Prof h.oudani</a></td>
-            <td>algebre<br>Td - amphi A<br> <a href="message_prof.html">Prof I.boutaayamo</a></td>
-            <td>analyse<br>Td - amphi A<br> <a href="message_prof.html">Prof A.Hadri</a></td>
-        </tr>
-        <tr>
-            <th >jeudi</th>
-            <td>traitement de signal<br>cours - amphi A<br> <a href="message_prof.html">Prof H.Azzahhafi</a></td>
-            <td>traitement de signal<br>Td - amphi A<br> <a href="message_prof.html">Prof H.Azzahhafi</a></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <th >vendredi</th>
-            <td>algebre<br>Td - amphi C<br><a href="message_prof.html">Prof I.boutaayamo </a></td>
-            <td>analyse<br>Td - amphi C<br><a href="message_prof.html">Prof A.Hadri </a></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <th >samedi</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>programation web<br>cours - salle P1<br> <a href="message_prof.html">Prof K.Omari</a></td>
-            <td>programation web<p style="color: red;">Tp/Td - salle P2</p> <a href="message_prof.html">Prof K.Omari</a></td>
-        </tr>
-    </table>
+
+    <h2 id="titre">Envoyer un message au professeur</h2>
+
+    <form>
+        <label>Nom :</label><br>
+        <input type="text" name="nom" id="nomEtudiant"><br><br>
+
+        <label>Email :</label><br>
+        <input type="email" name="email"><br><br>
+
+        <label>Message :</label><br>
+        <textarea name="message" rows="5" cols="30"></textarea><br><br>
+
+        <input type="submit" value="Envoyer">
+    </form>
+
 </body>
 
 </html>
