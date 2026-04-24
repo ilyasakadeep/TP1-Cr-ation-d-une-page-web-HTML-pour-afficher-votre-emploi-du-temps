@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP JavaScript – 3 Exercices</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #F7F5F0;
+    --surface: #FFFFFF;
+    --border: #E2DDD5;
+    --accent: #2C5F8A;
+    --accent-light: #E6F1FB;
+    --accent-mid: #378ADD;
+    --success: #3B6D11;
+    --success-bg: #EAF3DE;
+    --error: #A32D2D;
+    --error-bg: #FCEBEB;
+    --text: #1A1A18;
+    --muted: #6B6A65;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+    --serif: 'DM Serif Display', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  header {
+    max-width: 760px;
+    margin: 0 auto 3rem;
+    text-align: center;
+  }
+
+  header h1 {
+    font-family: var(--serif);
+    font-size: 2.8rem;
+    color: var(--accent);
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 1rem;
+    letter-spacing: 0.03em;
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+  }
+
+  .card {
+    max-width: 760px;
+    margin: 0 auto 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 1.25rem 1.75rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .ex-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .card-header h2 {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--text);
+  }
+
+  .card-body {
+    padding: 1.5rem 1.75rem;
+  }
+
+  .output-box {
+    background: #F0EDE8;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.88rem;
+    color: var(--text);
+    min-height: 60px;
+    margin-top: 1rem;
+    white-space: pre-wrap;
+    line-height: 1.6;
+  }
+
+  .output-box.empty {
+    color: var(--muted);
+    font-style: italic;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+  }
+
+  /* Input row */
+  .input-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+
+  input[type="number"], input[type="text"] {
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #FAF9F7;
+    color: var(--text);
+    width: 120px;
+    outline: none;
+    transition: border 0.2s;
+  }
+
+  input[type="number"]:focus, input[type="text"]:focus {
+    border-color: var(--accent-mid);
+  }
+
+  input[type="number"]::-webkit-inner-spin-button { opacity: 0.5; }
+
+  label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .btn:hover { background: #1e4a6f; border-color: #1e4a6f; }
+  .btn:active { transform: scale(0.97); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--accent);
+  }
+  .btn-ghost:hover { background: var(--accent-light); }
+
+  .line { display: flex; align-items: center; gap: 8px; }
+
+  /* Quiz specific */
+  .quiz-score {
+    display: flex;
+    gap: 12px;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    flex: 1;
+    min-width: 90px;
+    background: #F0EDE8;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    text-align: center;
+  }
+
+  .stat .val {
+    font-family: var(--mono);
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .stat .lbl {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .quiz-question {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent-mid);
+    border-radius: 0 8px 8px 0;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    color: var(--accent);
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .quiz-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .quiz-input-row input[type="text"] {
+    flex: 1;
+    width: auto;
+  }
+
+  .feedback {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    display: none;
+  }
+
+  .feedback.ok { background: var(--success-bg); color: var(--success); display: block; }
+  .feedback.err { background: var(--error-bg); color: var(--error); display: block; }
+
+  .progress-bar-wrap {
+    background: #E2DDD5;
+    border-radius: 999px;
+    height: 6px;
+    margin: 0.75rem 0;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent-mid);
+    border-radius: 999px;
+    transition: width 0.4s;
+  }
+
+  /* Number guessing */
+  .guess-hint {
+    font-size: 0.95rem;
+    padding: 8px 14px;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    font-weight: 500;
+  }
+
+  .hint-higher { background: #FAEEDA; color: #633806; }
+  .hint-lower  { background: var(--accent-light); color: #0C447C; }
+  .hint-found  { background: var(--success-bg); color: var(--success); }
+
+  .attempts-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 0.75rem;
+  }
+
+  .attempt-chip {
+    padding: 3px 10px;
+    background: #F0EDE8;
+    border-radius: 999px;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .attempt-chip.found {
+    background: var(--success-bg);
+    color: var(--success);
+    font-weight: 600;
+  }
+
+  /* Code snippet */
+  .code-snippet {
+    background: #1A1A18;
+    color: #D4D0C9;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin-top: 1rem;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .code-snippet::after {
+    content: "voir le code";
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 0.72rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .code-snippet.expanded::after { content: "masquer"; }
+
+  .code-content { display: none; }
+  .code-snippet.expanded .code-content { display: block; }
+
+  .kw { color: #7B9FE0; }
+  .fn { color: #E0A97B; }
+  .str { color: #8FC98F; }
+  .cmt { color: #555550; font-style: italic; }
+  .num { color: #E0C97B; }
+
+  hr.section-divider {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 1.25rem 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">TP JavaScript</div>
+  <h1>Exercices interactifs</h1>
+  <p>Trois exercices pratiques — exécutés directement dans la page</p>
+</header>
+
+<!-- ────────────────────────── EXERCICE 1 ────────────────────────── -->
+<div class="card">
+  <div class="card-header">
+    <div class="ex-num">1</div>
+    <h2>Calculatrice de base</h2>
+  </div>
+  <div class="card-body">
+    <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1rem;">Saisissez deux nombres pour afficher la somme, la différence, le produit et le quotient.</p>
+
+    <div class="input-row">
+      <div>
+        <label>Nombre A</label>
+        <input type="number" id="ex1-a" value="12" />
+      </div>
+      <div>
+        <label>Nombre B</label>
+        <input type="number" id="ex1-b" value="4" />
+      </div>
+      <div style="align-self:flex-end;">
+        <button class="btn" onclick="calculer()">Calculer</button>
+      </div>
+    </div>
+
+    <div id="ex1-out" class="output-box empty">Le résultat apparaîtra ici…</div>
+
+    <div class="code-snippet" id="code1" onclick="this.classList.toggle('expanded')">
+      <span style="color:#888;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;">Script JS</span>
+      <div class="code-content">
+<pre><span class="kw">function</span> <span class="fn">calculer</span>() {
+  <span class="kw">const</span> a = <span class="fn">parseFloat</span>(<span class="fn">document</span>.<span class="fn">getElementById</span>(<span class="str">"ex1-a"</span>).<span class="fn">value</span>);
+  <span class="kw">const</span> b = <span class="fn">parseFloat</span>(<span class="fn">document</span>.<span class="fn">getElementById</span>(<span class="str">"ex1-b"</span>).<span class="fn">value</span>);
+
+  <span class="kw">const</span> somme      = a + b;
+  <span class="kw">const</span> difference = a - b;
+  <span class="kw">const</span> produit    = a * b;
+  <span class="kw">const</span> quotient   = b !== <span class="num">0</span> ? a / b : <span class="str">"indéfini (division par zéro)"</span>;
+
+  <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">`Somme      : </span>${somme}<span class="str">`</span>);
+  <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">`Différence : </span>${difference}<span class="str">`</span>);
+  <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">`Produit    : </span>${produit}<span class="str">`</span>);
+  <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">`Quotient   : </span>${quotient}<span class="str">`</span>);
+}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────── EXERCICE 2 ────────────────────────── -->
+<div class="card">
+  <div class="card-header">
+    <div class="ex-num">2</div>
+    <h2>Deviner le nombre</h2>
+  </div>
+  <div class="card-body">
+    <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1rem;">L'ordinateur choisit un nombre entre 1 et 10. Trouvez-le en le moins de tentatives possible !</p>
+
+    <div class="line" style="gap:8px;margin-bottom:0.75rem;">
+      <button class="btn btn-ghost" onclick="nouvellePartie()" id="btn-new">Nouvelle partie</button>
+      <span id="ex2-status" style="font-size:0.85rem;color:var(--muted);"></span>
+    </div>
+
+    <div id="ex2-game" style="display:none;">
+      <div class="quiz-input-row">
+        <input type="number" id="ex2-guess" min="1" max="10" placeholder="1 – 10"
+               onkeydown="if(event.key==='Enter') proposer()" />
+        <button class="btn" onclick="proposer()">Proposer</button>
+      </div>
+
+      <div id="ex2-hint" class="guess-hint" style="display:none;"></div>
+
+      <div class="attempts-list" id="ex2-chips"></div>
+    </div>
+
+    <div class="code-snippet" id="code2" onclick="this.classList.toggle('expanded')">
+      <span style="color:#888;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;">Script JS</span>
+      <div class="code-content">
+<pre><span class="kw">let</span> secretEx2, tentativesEx2, gagnéEx2;
+
+<span class="kw">function</span> <span class="fn">nouvellePartie</span>() {
+  secretEx2    = <span class="fn">Math</span>.<span class="fn">floor</span>(<span class="fn">Math</span>.<span class="fn">random</span>() * <span class="num">10</span>) + <span class="num">1</span>;
+  tentativesEx2 = <span class="num">0</span>;
+  gagnéEx2     = <span class="kw">false</span>;
+  <span class="cmt">// réinitialise l'interface…</span>
+}
+
+<span class="kw">function</span> <span class="fn">proposer</span>() {
+  <span class="kw">const</span> guess = <span class="fn">parseInt</span>(<span class="fn">document</span>.<span class="fn">getElementById</span>(<span class="str">"ex2-guess"</span>).<span class="fn">value</span>);
+  tentativesEx2++;
+
+  <span class="kw">if</span> (guess === secretEx2) {
+    <span class="fn">alert</span>(<span class="str">`Bravo ! Trouvé en </span>${tentativesEx2}<span class="str"> tentative(s).`</span>);
+  } <span class="kw">else if</span> (guess < secretEx2) {
+    <span class="fn">alert</span>(<span class="str">"Le nombre est plus grand !"</span>);
+  } <span class="kw">else</span> {
+    <span class="fn">alert</span>(<span class="str">"Le nombre est plus petit !"</span>);
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────── EXERCICE 3 ────────────────────────── -->
+<div class="card">
+  <div class="card-header">
+    <div class="ex-num">3</div>
+    <h2>Quiz interactif</h2>
+  </div>
+  <div class="card-body">
+    <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1rem;">5 questions de culture générale. Répondez à chacune et consultez votre score final.</p>
+
+    <button class="btn" id="btn-quiz" onclick="lancerQuiz()">Démarrer le Quiz</button>
+
+    <div id="quiz-area" style="display:none;margin-top:1.25rem;">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="quiz-progress" style="width:0%"></div>
+      </div>
+      <p id="quiz-counter" style="font-size:0.8rem;color:var(--muted);margin-bottom:0.75rem;"></p>
+
+      <div class="quiz-question" id="quiz-q"></div>
+
+      <div class="quiz-input-row">
+        <input type="text" id="quiz-ans" placeholder="Votre réponse…"
+               onkeydown="if(event.key==='Enter') validerReponse()" />
+        <button class="btn" onclick="validerReponse()">Valider</button>
+      </div>
+
+      <div class="feedback" id="quiz-feedback"></div>
+    </div>
+
+    <div id="quiz-result" style="display:none;margin-top:1.25rem;">
+      <p id="quiz-result-msg" style="font-size:1rem;font-weight:500;margin-bottom:1rem;"></p>
+      <div class="quiz-score">
+        <div class="stat"><div class="val" id="r-correct">0</div><div class="lbl">Correctes</div></div>
+        <div class="stat"><div class="val" id="r-wrong">0</div><div class="lbl">Incorrectes</div></div>
+        <div class="stat"><div class="val" id="r-pct">0%</div><div class="lbl">Score</div></div>
+      </div>
+      <button class="btn btn-ghost" style="margin-top:1rem;" onclick="resetQuiz()">Recommencer</button>
+    </div>
+
+    <div class="code-snippet" id="code3" onclick="this.classList.toggle('expanded')">
+      <span style="color:#888;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;">Script JS</span>
+      <div class="code-content">
+<pre><span class="kw">const</span> QUESTIONS = [
+  [<span class="str">"Quelle est la capitale de la France ?"</span>, <span class="str">"Paris"</span>],
+  [<span class="str">"Combien de côtés a un hexagone ?"</span>, <span class="str">"6"</span>],
+  [<span class="str">"Quel est le plus grand océan ?"</span>, <span class="str">"Pacifique"</span>],
+  [<span class="str">"Qui a écrit Hamlet ?"</span>, <span class="str">"Shakespeare"</span>],
+  [<span class="str">"En quelle année a eu lieu la Révolution française ?"</span>, <span class="str">"1789"</span>],
+];
+
+<span class="kw">function</span> <span class="fn">lancerQuiz</span>() {
+  <span class="kw">let</span> score = <span class="num">0</span>;
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i < QUESTIONS.<span class="fn">length</span>; i++) {
+    <span class="kw">const</span> [question, bonne] = QUESTIONS[i];
+    <span class="kw">const</span> reponse = <span class="fn">prompt</span>(question);
+    <span class="kw">if</span> (reponse !== <span class="kw">null</span> &&
+        reponse.<span class="fn">trim</span>().<span class="fn">toLowerCase</span>() === bonne.<span class="fn">toLowerCase</span>()) {
+      <span class="fn">alert</span>(<span class="str">"Réponse juste !"</span>);
+      score++;
+    } <span class="kw">else</span> {
+      <span class="fn">alert</span>(<span class="str">"Réponse fausse."</span>);
+    }
+  }
+  <span class="fn">alert</span>(
+    <span class="str">`Vous avez répondu correctement à </span>${score}<span class="str"> questions sur </span>${QUESTIONS.<span class="fn">length</span>}<span class="str">.`</span>
+  );
+}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   EXERCICE 1 – Calculatrice
+═══════════════════════════════════════ */
+function calculer() {
+  const a = parseFloat(document.getElementById("ex1-a").value);
+  const b = parseFloat(document.getElementById("ex1-b").value);
+  const out = document.getElementById("ex1-out");
+
+  if (isNaN(a) || isNaN(b)) {
+    out.className = "output-box";
+    out.textContent = "⚠ Veuillez saisir deux nombres valides.";
+    return;
+  }
+
+  const somme      = a + b;
+  const difference = a - b;
+  const produit    = a * b;
+  const quotient   = b !== 0 ? (a / b).toFixed(4).replace(/\.?0+$/, '') : "indéfini (division par zéro)";
+
+  // Also log to console as the exercise requires
+  console.log("Somme      :", somme);
+  console.log("Différence :", difference);
+  console.log("Produit    :", produit);
+  console.log("Quotient   :", quotient);
+
+  out.className = "output-box";
+  out.textContent =
+    `Somme        : ${somme}\nDifférence   : ${difference}\nProduit      : ${produit}\nQuotient     : ${quotient}`;
+}
+
+/* ═══════════════════════════════════════
+   EXERCICE 2 – Devinette
+═══════════════════════════════════════ */
+let secretEx2 = null, tentativesEx2 = 0, gagnéEx2 = false;
+
+function nouvellePartie() {
+  secretEx2     = Math.floor(Math.random() * 10) + 1;
+  tentativesEx2 = 0;
+  gagnéEx2      = false;
+
+  document.getElementById("ex2-game").style.display   = "block";
+  document.getElementById("ex2-hint").style.display   = "none";
+  document.getElementById("ex2-chips").innerHTML      = "";
+  document.getElementById("ex2-guess").value          = "";
+  document.getElementById("ex2-status").textContent   = "Partie en cours…";
+  document.getElementById("ex2-guess").focus();
+}
+
+function proposer() {
+  if (!secretEx2 || gagnéEx2) return;
+
+  const input = document.getElementById("ex2-guess");
+  const guess = parseInt(input.value);
+  const hint  = document.getElementById("ex2-hint");
+  const chips = document.getElementById("ex2-chips");
+
+  if (isNaN(guess) || guess < 1 || guess > 10) {
+    hint.className = "guess-hint hint-lower";
+    hint.style.display = "block";
+    hint.textContent   = "Saisissez un entier entre 1 et 10.";
+    return;
+  }
+
+  tentativesEx2++;
+
+  const chip = document.createElement("span");
+  chip.className = "attempt-chip";
+  chip.textContent = guess;
+
+  hint.style.display = "block";
+
+  if (guess === secretEx2) {
+    gagnéEx2 = true;
+    chip.className = "attempt-chip found";
+    hint.className = "guess-hint hint-found";
+    hint.textContent = `✓ Bravo ! Trouvé en ${tentativesEx2} tentative${tentativesEx2 > 1 ? 's' : ''}.`;
+    document.getElementById("ex2-status").textContent = `Score : ${tentativesEx2} tentative(s)`;
+    console.log(`Nombre trouvé : ${secretEx2} en ${tentativesEx2} tentative(s).`);
+  } else if (guess < secretEx2) {
+    hint.className = "guess-hint hint-higher";
+    hint.textContent = `${guess} → Le nombre est plus grand !`;
+  } else {
+    hint.className = "guess-hint hint-lower";
+    hint.textContent = `${guess} → Le nombre est plus petit !`;
+  }
+
+  chips.appendChild(chip);
+  input.value = "";
+  if (!gagnéEx2) input.focus();
+}
+
+/* ═══════════════════════════════════════
+   EXERCICE 3 – Quiz
+═══════════════════════════════════════ */
+const QUESTIONS = [
+  ["Quelle est la capitale de la France ?",            "paris"],
+  ["Combien de côtés a un hexagone ?",                 "6"],
+  ["Quel est le plus grand océan du monde ?",          "pacifique"],
+  ["Qui a écrit la pièce Hamlet ?",                    "shakespeare"],
+  ["En quelle année a eu lieu la Révolution française ?", "1789"],
+];
+
+let quizIndex = 0, quizScore = 0, quizRunning = false;
+
+function lancerQuiz() {
+  quizIndex   = 0;
+  quizScore   = 0;
+  quizRunning = true;
+
+  document.getElementById("btn-quiz").style.display     = "none";
+  document.getElementById("quiz-area").style.display    = "block";
+  document.getElementById("quiz-result").style.display  = "none";
+
+  afficherQuestion();
+}
+
+function afficherQuestion() {
+  const total = QUESTIONS.length;
+  document.getElementById("quiz-counter").textContent  = `Question ${quizIndex + 1} / ${total}`;
+  document.getElementById("quiz-progress").style.width = `${(quizIndex / total) * 100}%`;
+  document.getElementById("quiz-q").textContent        = QUESTIONS[quizIndex][0];
+  document.getElementById("quiz-ans").value            = "";
+  document.getElementById("quiz-feedback").className   = "feedback";
+  document.getElementById("quiz-feedback").textContent = "";
+  setTimeout(() => document.getElementById("quiz-ans").focus(), 50);
+}
+
+function validerReponse() {
+  if (!quizRunning) return;
+
+  const input   = document.getElementById("quiz-ans");
+  const reponse = input.value.trim().toLowerCase();
+  const bonne   = QUESTIONS[quizIndex][1].toLowerCase();
+  const fb      = document.getElementById("quiz-feedback");
+
+  if (!reponse) return;
+
+  const correcte = reponse === bonne;
+  if (correcte) {
+    quizScore++;
+    fb.className   = "feedback ok";
+    fb.textContent = "✓ Réponse juste !";
+    console.log("Réponse juste");
+  } else {
+    fb.className   = "feedback err";
+    fb.textContent = `✗ Réponse fausse. La bonne réponse était : ${QUESTIONS[quizIndex][1]}`;
+    console.log("Réponse fausse");
+  }
+
+  quizIndex++;
+  const total = QUESTIONS.length;
+
+  if (quizIndex < total) {
+    setTimeout(afficherQuestion, correcte ? 900 : 1600);
+  } else {
+    setTimeout(terminerQuiz, correcte ? 900 : 1600);
+  }
+}
+
+function terminerQuiz() {
+  const total = QUESTIONS.length;
+  quizRunning = false;
+
+  document.getElementById("quiz-area").style.display   = "none";
+  document.getElementById("quiz-result").style.display = "block";
+
+  const pct = Math.round((quizScore / total) * 100);
+
+  document.getElementById("quiz-result-msg").textContent =
+    `Vous avez répondu correctement à ${quizScore} question${quizScore > 1 ? 's' : ''} sur ${total}.`;
+  document.getElementById("r-correct").textContent = quizScore;
+  document.getElementById("r-wrong").textContent   = total - quizScore;
+  document.getElementById("r-pct").textContent     = `${pct}%`;
+
+  console.log(`Score final : ${quizScore} / ${total}`);
+}
+
+function resetQuiz() {
+  document.getElementById("quiz-result").style.display = "none";
+  document.getElementById("btn-quiz").style.display    = "inline-flex";
+}
+</script>
+</body>
+</html>
