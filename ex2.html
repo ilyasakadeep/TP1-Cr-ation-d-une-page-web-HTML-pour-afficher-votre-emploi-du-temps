@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Exercice 2 – To-Do List</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #fdf6ec;
+      --surface:   #fff8f0;
+      --ink:       #1c1208;
+      --muted:     #9a8a74;
+      --accent:    #e85d1a;
+      --accent2:   #2d6a4f;
+      --done-bg:   #e8f5e9;
+      --done-text: #52796f;
+      --border:    #e2d5c3;
+      --shadow:    0 4px 24px rgba(28,18,8,.10);
+    }
+
+    body {
+      font-family: 'Space Mono', monospace;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1rem 4rem;
+      gap: 0;
+    }
+
+    /* ── Header ─────────────────────────────────────────── */
+    header {
+      text-align: center;
+      margin-bottom: 2.4rem;
+    }
+    header .label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.2rem, 6vw, 3.2rem);
+      line-height: 1.1;
+      color: var(--ink);
+    }
+    header p {
+      margin-top: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* ── Card ────────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 520px;
+      overflow: hidden;
+    }
+
+    /* ── Form ────────────────────────────────────────────── */
+    .form-row {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .form-row input[type="text"] {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.88rem;
+      padding: 1rem 1.2rem;
+      color: var(--ink);
+    }
+    .form-row input[type="text"]::placeholder { color: var(--muted); }
+    .form-row button {
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'Space Mono', monospace;
+      font-size: 1.4rem;
+      font-weight: 700;
+      padding: 0 1.4rem;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.1s;
+      flex-shrink: 0;
+    }
+    .form-row button:hover  { background: #c94e12; }
+    .form-row button:active { transform: scale(0.95); }
+
+    /* ── Stats bar ───────────────────────────────────────── */
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+      background: #fdf2e5;
+      border-bottom: 1px solid var(--border);
+    }
+    .stats span { transition: color 0.2s; }
+    #btn-clear-done {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--accent);
+      padding: 0;
+      text-decoration: underline;
+    }
+    #btn-clear-done:hover { color: #c94e12; }
+
+    /* ── List ─────────────────────────────────────────────── */
+    #todo-list {
+      list-style: none;
+      padding: 0.5rem 0;
+      min-height: 60px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-style: italic;
+    }
+
+    /* ── List item ────────────────────────────────────────── */
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      animation: slideIn 0.22s ease;
+      transition: background 0.15s;
+    }
+    .todo-item:last-child { border-bottom: none; }
+    .todo-item:hover { background: #fff3e6; }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Checkbox */
+    .todo-item input[type="checkbox"] {
+      appearance: none;
+      width: 18px; height: 18px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      flex-shrink: 0;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .todo-item input[type="checkbox"]:checked {
+      background: var(--accent2);
+      border-color: var(--accent2);
+    }
+    .todo-item input[type="checkbox"]:checked::after {
+      content: '✓';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* Text */
+    .todo-text {
+      flex: 1;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      word-break: break-word;
+      transition: color 0.2s, text-decoration 0.2s;
+    }
+    .todo-item.done .todo-text {
+      color: var(--done-text);
+      text-decoration: line-through;
+    }
+
+    /* Delete btn */
+    .btn-delete {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      color: #ccc;
+      padding: 0 0.2rem;
+      line-height: 1;
+      flex-shrink: 0;
+      transition: color 0.15s, transform 0.1s;
+    }
+    .btn-delete:hover  { color: var(--accent); }
+    .btn-delete:active { transform: scale(0.88); }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    footer {
+      margin-top: 1.6rem;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="label">Exercice 2</div>
+    <h1>Ma To-Do List</h1>
+    <p>Ajoutez, cochez et supprimez vos tâches.</p>
+  </header>
+
+  <div class="card">
+    <!-- Formulaire d'ajout -->
+    <div class="form-row">
+      <input type="text" id="task-input" placeholder="Nouvelle tâche…" maxlength="120" autocomplete="off"/>
+      <button id="btn-add" title="Ajouter">+</button>
+    </div>
+
+    <!-- Barre de stats -->
+    <div class="stats">
+      <span id="stat-total">0 tâche(s)</span>
+      <span id="stat-done">0 accomplie(s)</span>
+      <button id="btn-clear-done">Supprimer accomplies</button>
+    </div>
+
+    <!-- Liste des tâches -->
+    <ul id="todo-list">
+      <li class="empty-state" id="empty-msg">Aucune tâche pour l'instant ✦</li>
+    </ul>
+  </div>
+
+  <footer>JavaScript · DOM · Exercice pédagogique</footer>
+
+  <script>
+    // ── Références DOM ─────────────────────────────────────────────────────────
+    const input       = document.getElementById('task-input');
+    const btnAdd      = document.getElementById('btn-add');
+    const list        = document.getElementById('todo-list');
+    const emptyMsg    = document.getElementById('empty-msg');
+    const statTotal   = document.getElementById('stat-total');
+    const statDone    = document.getElementById('stat-done');
+    const btnClearDone= document.getElementById('btn-clear-done');
+
+    // ── Helpers ────────────────────────────────────────────────────────────────
+    function updateStats() {
+      const items = list.querySelectorAll('.todo-item');
+      const done  = list.querySelectorAll('.todo-item.done');
+      statTotal.textContent = `${items.length} tâche(s)`;
+      statDone.textContent  = `${done.length} accomplie(s)`;
+      emptyMsg.style.display = items.length === 0 ? 'block' : 'none';
+    }
+
+    // ── Créer un élément <li> de tâche ────────────────────────────────────────
+    function createTaskItem(text) {
+      const li = document.createElement('li');
+      li.className = 'todo-item';
+
+      // Checkbox
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.addEventListener('change', () => {
+        li.classList.toggle('done', cb.checked);
+        updateStats();
+      });
+
+      // Texte
+      const span = document.createElement('span');
+      span.className = 'todo-text';
+      span.textContent = text;
+
+      // Bouton supprimer
+      const btnDel = document.createElement('button');
+      btnDel.className = 'btn-delete';
+      btnDel.textContent = '✕';
+      btnDel.title = 'Supprimer';
+      btnDel.addEventListener('click', () => {
+        li.style.opacity = '0';
+        li.style.transform = 'translateX(20px)';
+        li.style.transition = 'opacity 0.2s, transform 0.2s';
+        setTimeout(() => { li.remove(); updateStats(); }, 200);
+      });
+
+      li.appendChild(cb);
+      li.appendChild(span);
+      li.appendChild(btnDel);
+      return li;
+    }
+
+    // ── Ajouter une tâche ──────────────────────────────────────────────────────
+    function addTask() {
+      const text = input.value.trim();
+      if (!text) {
+        input.style.outline = '2px solid #e85d1a';
+        setTimeout(() => input.style.outline = '', 600);
+        return;
+      }
+      list.appendChild(createTaskItem(text));
+      input.value = '';
+      input.focus();
+      updateStats();
+    }
+
+    // ── Événements ─────────────────────────────────────────────────────────────
+    btnAdd.addEventListener('click', addTask);
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') addTask();
+    });
+
+    btnClearDone.addEventListener('click', () => {
+      list.querySelectorAll('.todo-item.done').forEach(item => item.remove());
+      updateStats();
+    });
+
+    // ── Init ───────────────────────────────────────────────────────────────────
+    updateStats();
+  </script>
+</body>
+</html>
